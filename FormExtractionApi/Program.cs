@@ -1,8 +1,19 @@
+using FormExtractionApi.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+
+
+// Register AgentCaller with endpoint from config
+builder.Services.AddSingleton(sp =>
+{
+    var endpoint = builder.Configuration["AzureFoundry:Endpoint"];
+    return new AgentCaller(endpoint);
+});
 
 var app = builder.Build();
 
