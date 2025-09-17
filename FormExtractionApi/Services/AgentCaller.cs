@@ -15,13 +15,16 @@ public class AgentCaller
         // Use DefaultAzureCredential or another credential type
         var credential = new DefaultAzureCredential();
         _agentsClient = new PersistentAgentsClient(endpointUrl, credential);
-        _agent = _agentsClient.Administration.GetAgent("asst_6JOFuh8a2BSbRJO86veWd5l8");
+        //_agent = _agentsClient.Administration.GetAgent("asst_6JOFuh8a2BSbRJO86veWd5l8");
     }
 
     // Text input
-    public async Task<string> CallAgentAsync(FormExtractionAgent agentEnum, string text)
+    public async Task<string> CallAgentAsync(string agentId, string text)
     {
-        var agent = _agentsClient.Administration.GetAgent(agentEnum.ToString());
+        ArgumentException.ThrowIfNullOrEmpty(agentId, nameof(agentId));
+        ArgumentException.ThrowIfNullOrEmpty(text, nameof(text));
+
+        var agent = _agentsClient.Administration.GetAgent(agentId);
         var thread = _agentsClient.Threads.CreateThread();
 
         _agentsClient.Messages.CreateMessage(thread.Value.Id, MessageRole.User, text);
@@ -33,9 +36,20 @@ public class AgentCaller
     }
 
     // Overload for image input
-    public async Task<string> CallAgentAsync(FormExtractionAgent agentEnum, string text, Stream imageStream, string imageFileName, string imageContentType)
+    public async Task<string> CallAgentAsync(string agentId, string text, Stream imageStream, string imageFileName, string imageContentType)
     {
-        var agent = _agentsClient.Administration.GetAgent(agentEnum.ToString());
+        ArgumentException.ThrowIfNullOrEmpty(agentId, nameof(agentId));
+        ArgumentException.ThrowIfNullOrEmpty(text, nameof(text));
+        ArgumentNullException.ThrowIfNull(imageStream, nameof(imageStream));
+        ArgumentException.ThrowIfNullOrEmpty(imageFileName, nameof(imageFileName));
+        ArgumentException.ThrowIfNullOrEmpty(imageContentType, nameof(imageContentType));
+
+        if (!imageStream.CanRead)
+        {
+            throw new ArgumentException("Image stream must be readable", nameof(imageStream));
+        }
+
+        var agent = _agentsClient.Administration.GetAgent(agentId);
         var thread = _agentsClient.Threads.CreateThread();
 
         // Upload the image file

@@ -12,9 +12,11 @@ AIFoundry Multi-Agent POC demostrate how to use Agent in Azure AI Foundry. This 
 ## 📦 Step 2: Add Required NuGet Packages
 
     cd FormExtractionApi
+    dotnet add package Azure.AI.Agents
     dotnet add package Azure.Identity
-    dotnet add package Azure.AI.Projects
-    dotnet add package Azure.AI.Agents.Persistent
+    dotnet add package Swashbuckle.AspNetCore
+    dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
+
 
 ## 🧱 Step 3: Create the `FormExtractionAgent` Enum
 

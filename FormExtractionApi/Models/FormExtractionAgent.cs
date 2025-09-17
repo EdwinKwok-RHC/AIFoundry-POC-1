@@ -7,5 +7,6 @@ public enum FormExtractionAgent
     HVACFormAgent,
     PlumbingFormAgent,
     GenericFormAgent,
-    OtherAgent
+    OtherAgent,
+    TextAnalysisAgent
 }
